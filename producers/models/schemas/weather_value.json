@@ -1,0 +1,14 @@
+{
+  "namespace": "com.cta-opt-public-transport",
+  "type": "record",
+  "name": "com.cta-opt-public-transport.weather_value",
+  "fields": [
+    {
+      "name": "temperature",
+      "type": "int"
+    }, {
+      "name": "status",
+      "type": "string"
+    }
+  ]
+}

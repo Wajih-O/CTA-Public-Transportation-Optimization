@@ -1,0 +1,11 @@
+{
+  "namespace": "com.cta-opt-public-transport",
+  "type": "record",
+  "name": "com.cta-opt-public-transport.weather_key",
+  "fields": [
+    {
+      "name": "timestamp",
+      "type": "long"
+    }
+  ]
+}
