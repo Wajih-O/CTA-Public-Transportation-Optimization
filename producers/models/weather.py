@@ -33,7 +33,7 @@ class Weather(Producer):
 
     def __init__(self, month):
         super().__init__(
-            "weather", # TODO: Come up with a better topic name
+            "org.chicago.cta.weather.v1",
             key_schema=Weather.key_schema,
             value_schema=Weather.value_schema,
             num_partitions=1,
@@ -67,22 +67,6 @@ class Weather(Producer):
 
     def run(self, month):
         self._set_weather(month)
-
-        # Solved to clean-up:
-
-        #  Failed to send weather data: {
-        # "error_code": 42203,
-        # "message": "Conversion of JSON to Avro failed: Failed to convert JSON to Avro: Expected record-start. Got VALUE_NULL"
-        # })
-
-        # after adding the key to record ->
-
-        #  Failed to send weather data: {
-        #   "error_code": 42203,
-        #   "message": "Conversion of JSON to Avro failed: Failed to convert JSON to Avro: Expected string. Got VALUE_NUMBER_INT"
-        # })
-
-        # self.status -> self.status.name
 
         curr_time = datetime.utcnow().replace(
             hour=0, minute=0, second=0, microsecond=0

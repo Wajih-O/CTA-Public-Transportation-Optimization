@@ -1,7 +1,7 @@
 {
-  "namespace": "com.cta-opt-public-transport",
+  "namespace": "org.chicago.cta",
   "type": "record",
-  "name": "com.cta-opt-public-transport.weather_value",
+  "name": "org.chicago.cta.weather_value",
   "fields": [
     {
       "name": "temperature",
