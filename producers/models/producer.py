@@ -40,8 +40,7 @@ class Producer:
         # and use the Host URL for Kafka and Schema Registry!
 
         self.broker_properties = {
-            "bootstrap.servers": "localhost:9092",  # TODO (optional): load from a config file!
-            "schema.registry.url": "http://localhost:8081"
+            "bootstrap.servers": ', '.join(map(lambda port: f'PLAINTEXT://localhost:{port}', range(9092, 9095)))
         }
 
         # If the topic does not already exist, try to create it
@@ -49,10 +48,10 @@ class Producer:
             self.create_topic()
             Producer.existing_topics.add(self.topic_name)
 
-        # TODO: Configure the AvroProducer
-        # assumes that value_schema and key_schema passed as strings !
-        self.producer = AvroProducer(self.broker_properties, default_key_schema=avro.loads(self.key_schema),
-                            default_value_schema=avro.loads(self.value_schema))
+        # Configure the AvroProducer assumes that value_schema and key_schema passed as avro schema (see derived classes: Station, Turnstile) !
+        avro_producer_config = self.broker_properties.copy()
+        avro_producer_config.update({"schema.registry.url": "http://localhost:8081"})
+        self.producer = AvroProducer(avro_producer_config, default_key_schema=self.key_schema, default_value_schema=self.value_schema)
 
     def create_topic(self):
         """Creates the producer topic if it does not already exist"""
@@ -61,7 +60,9 @@ class Producer:
             futures = client.create_topics([
                     NewTopic(self.topic_name, num_partitions=self.num_partitions,
                             replication_factor=self.num_replicas,
-                            # config={"compression_type":"lz4"})
+                            config={
+                                 # "compression_type":"lz4"
+                                })
                             # TODO: cleanup.policy, delete.retentions.ms
                 ])
             # Wait for each operation to finish.
@@ -70,7 +71,7 @@ class Producer:
                     future.result()  # The result itself is None
                     logger.info("Topic {} created".format(topic))
                 except Exception as e:
-                    logger.infor("Failed to create topic {}: {}".format(topic, e))
+                    logger.info("Failed to create topic {}: {}".format(topic, e))
         else:
             logger.info(f"topic {self.topic_name} already exists!")
 
