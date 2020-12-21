@@ -53,10 +53,10 @@ def transform_station(station: Station):
 app = faust.App("stations-stream", broker="kafka://localhost:9092", store="memory://")
 
 # Define the input Kafka Topic
-topic = app.topic("pg_stations", value_type=Station)
+topic = app.topic("org.chicago.cta.pg_stations", value_type=Station)
 
 # Define the output Kafka Topic
-out_topic = app.topic("transformed_stations", partitions=1, key_type=int, value_type=TransformedStation)
+out_topic = app.topic("org.chicago.cta.stations.table.v1", partitions=1, key_type=int, value_type=TransformedStation)
 
 
 # Define a Faust Table
@@ -73,7 +73,7 @@ async def transformed_station_stream(stations):
         t_station = transform_station(station) # transform station
         if t_station is not None:
             # await out_topic.send(key=t_station.station_id, value=t_station)
-            table[t_station.station_name] = t_station
+            table[t_station.station_id] = t_station
 
 
 if __name__ == "__main__":
