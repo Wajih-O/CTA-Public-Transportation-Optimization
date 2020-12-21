@@ -1,0 +1,20 @@
+{
+  "namespace": "org.chicago.cta",
+  "type": "record",
+  "name": "org.chicago.cta.trunstile_value",
+  "fields": [
+    {
+      "name": "station_id",
+      "type": "int"
+    }, {
+      "name": "station_name",
+      "type": "string"
+    }, {
+      "name": "line",
+      "type": "string"
+    }, {
+      "name": "num_entries",
+      "type": "int"
+    }
+  ]
+}

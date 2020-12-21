@@ -1,0 +1,11 @@
+{
+  "namespace": "org.chicago.cta",
+  "type": "record",
+  "name": "org.chicago.cta.station_arrivals_key",
+  "fields": [
+    {
+      "name": "timestamp",
+      "type": "long"
+    }
+  ]
+}
