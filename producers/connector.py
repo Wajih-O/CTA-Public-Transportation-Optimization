@@ -7,10 +7,13 @@ import requests
 
 
 logger = logging.getLogger(__name__)
-
+logger.setLevel(logging.INFO)
 
 KAFKA_CONNECT_URL = "http://localhost:8083/connectors"
 CONNECTOR_NAME = "stations"
+NAMESPACE = "org.chicago.cta" # TODO: load from a centralized config
+TOPIC_PREFIX = f"{NAMESPACE}.pg_"
+
 
 def configure_connector():
     """Starts and configures the Kafka Connect connector"""
@@ -18,7 +21,7 @@ def configure_connector():
 
     resp = requests.get(f"{KAFKA_CONNECT_URL}/{CONNECTOR_NAME}")
     if resp.status_code == 200:
-        logging.debug("connector already created skipping recreation")
+        logging.warning("connector already created skipping recreation")
         return
 
     # Kafka Connect Config
@@ -26,7 +29,6 @@ def configure_connector():
     # using incrementing mode, with `stop_id` as the incrementing column name.
 
     # doc: https://docs.confluent.io/kafka-connect-jdbc/current/source-connector/source_config_options.html#database
-    logger.info("connector code not completed skipping connector creation")
     resp = requests.post(
        KAFKA_CONNECT_URL,
        headers={"Content-Type": "application/json"},
@@ -45,7 +47,7 @@ def configure_connector():
                "table.whitelist": "stations",
                "mode": "incrementing",
                "incrementing.column.name": "stop_id",
-               "topic.prefix": "pg_",
+               "topic.prefix": TOPIC_PREFIX,
                "poll.interval.ms": "3600000",
            }
        }),
@@ -57,7 +59,7 @@ def configure_connector():
     except:
         logger.error(f"Failed to create connector! {json.dumps(resp.json(), indent=2)})")
 
-    logger.debug("connector created successfully")
+    logger.info("connector created successfully")
 
 
 if __name__ == "__main__":
