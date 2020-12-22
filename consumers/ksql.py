@@ -18,7 +18,7 @@ KSQL_URL = "http://localhost:8088"
 
 # second: create `turnstile_summary` table by selecting from the
 #       `turnstile` table and grouping on station_id.
-#       cast the COUNT of station id to `count`
+#       cast the SUM(num_entries) id to `count`
 #       use value format JSON
 
 KSQL_STATEMENT = """
